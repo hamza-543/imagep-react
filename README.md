@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## Docker instrcutions for development ENV.
+- How to create docker image:
+  - Go to project directory/folder in terminal and run this command.
+  - Create image using: `docker build -t imagep-react-img -f Dockerfile-dev .`
+  - Create network: `docker network create imagepnetwork`
+  - Up Docker container: `docker run -it --name imagep-react --network imagepnetwork -p 3022:3022 -v <project-dir-path>:/app -d imagep-react-img`
