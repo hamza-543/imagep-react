@@ -1,0 +1,1 @@
+export const getImageUrl = (file) => URL.createObjectURL(file);
