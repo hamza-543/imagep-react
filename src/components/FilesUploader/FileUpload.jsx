@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyles } from './useStyles';
+import { acceptedInputMime } from '../../utils';
 
 const FileUpload = ({ handleSelectedFiles, template = '' }) => {
   const classes = useStyles();
@@ -36,6 +37,7 @@ const FileUpload = ({ handleSelectedFiles, template = '' }) => {
           <input
             type="file"
             id="uploadFiles"
+            accept={acceptedInputMime}
             multiple
             onChange={handleSelectedFiles}
             className={classes.fileInput}
