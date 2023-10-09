@@ -4,14 +4,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import StoreIcon from '@mui/icons-material/Store';
 import { Link } from 'react-router-dom';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { imageMimeTypes } from '../../utils';
+import { toImageMimeTypes } from '../../utils'; // get from backend rather than hard coded on frontend
+import { ImageApi } from '../../services/Api';
+import { downloadBlob } from '../../utils';
+import { useEffect } from 'react';
+
 
 const useStyles = makeStyles(() => ({
   appBar: {
     marginBottom: 14
-  },
-  inputLabel: {
-    // height: 50,
   },
   formControl: {
     minWidth: '140px !important',
@@ -19,13 +20,37 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavBar = () => {
+const NavBar = ({selectedFiles, setSelectedFiles}) => {
+  const fileName = 'Converted Files.zip'
   const classes = useStyles();
 
-  const [selectedValue, setSelectedValue] = useState('');
+  const [toFormat, setToFormat] = useState('');
+
+  const requestParams = (files, format = 'JPEG') => {
+    const formData = new FormData();
+    formData.append('format', format)
+    files.forEach(file => {
+      formData.append('images', file);
+    });
+    return formData;
+  }
 
   const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+    setToFormat(event.target.value);
+  };
+
+  const handleClick = () => {
+      const params = requestParams([...selectedFiles], toFormat);
+      ImageApi.convert(params)
+      .then((response) => {
+        setSelectedFiles([]);
+        setToFormat('');
+        downloadBlob(response.data, fileName)
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error(error);
+      });
   };
 
   const myPages = [
@@ -70,18 +95,26 @@ const NavBar = () => {
               </Button>
             ))}
             <FormControl className={classes.formControl}>
-              <InputLabel id="dropdown-label" className={classes.inputLabel}>Convert To</InputLabel>
+              <InputLabel id="dropdown-label">Convert To</InputLabel>
               <Select
                 labelId="dropdown-label"
-                id="dropdown"
-                value={selectedValue}
+                id="image-format-dropdown"
+                value={toFormat}
                 onChange={handleChange}
               >
-                {imageMimeTypes.map((mime) => (
-                  <MenuItem value={mime.mType}>{mime.name}</MenuItem>
+                {toImageMimeTypes.map((mime) => (
+                  <MenuItem value={mime.name}>{mime.name}</MenuItem>
                 ))}
               </Select>
             </FormControl>
+            {toFormat && selectedFiles.length > 0 && <Button
+              component={Link}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              onClick={handleClick}
+            >
+              Convert
+            </Button>
+            }
           </Box>
 
       </Toolbar>

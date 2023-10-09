@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ImageCardList from '../ImageCardList';
 import FileUpload from './FileUpload';
 
-const FileUploader = () => {
-  const [selectedFiles, setSelectedFiles] = useState([]);
+const FileUploader = ({selectedFiles, setSelectedFiles}) => {
 
   const handleSelectedFiles = (event) => {
     setSelectedFiles((prevSelectedFiles) => prevSelectedFiles.concat(Array.from(event.target.files)));
@@ -11,14 +10,14 @@ const FileUploader = () => {
 
   return (
     <>
-    {selectedFiles.length > 0 ?
-      ( 
+      {selectedFiles.length > 0 ?
+        (
         <ImageCardList files={selectedFiles} handleSelectedFiles={handleSelectedFiles}></ImageCardList>
-      ):
-      ( 
-        <FileUpload handleSelectedFiles={handleSelectedFiles}/>
-      )
-    }
+        ):
+        (
+          <FileUpload handleSelectedFiles={handleSelectedFiles}/>
+        )
+      }
     </>
   );
 };
