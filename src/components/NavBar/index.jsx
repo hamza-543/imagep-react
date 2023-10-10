@@ -7,7 +7,7 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { toImageMimeTypes } from '../../utils'; // get from backend rather than hard coded on frontend
 import { ImageApi } from '../../services/Api';
 import { downloadBlob } from '../../utils';
-import { useEffect } from 'react';
+import Toast from '../Toast';
 
 
 const useStyles = makeStyles(() => ({
@@ -39,17 +39,27 @@ const NavBar = ({selectedFiles, setSelectedFiles}) => {
     setToFormat(event.target.value);
   };
 
+  const onSuccess = () => {
+    setSelectedFiles([]);
+    setToFormat('');
+    Toast.success("Files Successfully Converted");
+  }
+
+  const onError = () => {
+    setSelectedFiles([]);
+    setToFormat('');
+    Toast.error("Something Wrong");
+  }
+
   const handleClick = () => {
       const params = requestParams([...selectedFiles], toFormat);
       ImageApi.convert(params)
       .then((response) => {
-        setSelectedFiles([]);
-        setToFormat('');
+        onSuccess();
         downloadBlob(response.data, fileName)
       })
-      .catch((error) => {
-        // Handle errors
-        console.error(error);
+      .catch(() => {
+        onError();
       });
   };
 
