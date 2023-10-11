@@ -4,6 +4,7 @@ import { Container } from '@mui/material';
 import ImageCard from '../ImageCard';
 import { getImageUrl } from '../../utils';
 import FileUpload from '../FilesUploader/FileUpload';
+import { SpinnerAfterNav } from '../Spinner';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -19,11 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImageCardList = ({files, handleSelectedFiles}) => {
+const ImageCardList = ({files, handleSelectedFiles, isConverting = false }) => {
   const classes = useStyles();
 
   return (
     <Container className={classes.container}>
+      {isConverting && <SpinnerAfterNav message={"Your files are being transformed. Hang on for a moment."}/>}
       <div className={classes.cardContainer}>
         {files.map((file, index) => (
           <ImageCard

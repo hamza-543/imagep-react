@@ -2,7 +2,7 @@ import React from 'react';
 import ImageCardList from '../ImageCardList';
 import FileUpload from './FileUpload';
 
-const FileUploader = ({selectedFiles, setSelectedFiles}) => {
+const FileUploader = ({selectedFiles, setSelectedFiles, isConverting}) => {
 
   const handleSelectedFiles = (event) => {
     setSelectedFiles((prevSelectedFiles) => prevSelectedFiles.concat(Array.from(event.target.files)));
@@ -12,7 +12,7 @@ const FileUploader = ({selectedFiles, setSelectedFiles}) => {
     <>
       {selectedFiles.length > 0 ?
         (
-        <ImageCardList files={selectedFiles} handleSelectedFiles={handleSelectedFiles}></ImageCardList>
+        <ImageCardList files={selectedFiles} handleSelectedFiles={handleSelectedFiles} isConverting={isConverting}></ImageCardList>
         ):
         (
           <FileUpload handleSelectedFiles={handleSelectedFiles}/>
