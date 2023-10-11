@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavBar = ({selectedFiles, setSelectedFiles}) => {
+const NavBar = ({selectedFiles, setSelectedFiles, setIsConverting}) => {
   const fileName = 'Converted Files.zip'
   const classes = useStyles();
 
@@ -52,6 +52,7 @@ const NavBar = ({selectedFiles, setSelectedFiles}) => {
   }
 
   const handleClick = () => {
+      setIsConverting(true);
       const params = requestParams([...selectedFiles], toFormat);
       ImageApi.convert(params)
       .then((response) => {
@@ -60,7 +61,7 @@ const NavBar = ({selectedFiles, setSelectedFiles}) => {
       })
       .catch(() => {
         onError();
-      });
+      }).finally(() => setIsConverting(false));
   };
 
   const myPages = [
